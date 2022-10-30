@@ -1,0 +1,19 @@
+parameter,value
+Feed/batch,850.23 kg
+T₀,300.0 K
+X Al in feed,0.045
+X powder in feed,0.015
+X Hg in Al,3.2999999999999997e-6
+X Hg in powder,0.0075
+X Hg in glass,2.605e-6
+η condenser,1.0
+η powder furnace,0.5
+η glass furnace,0.5
+η chiller,0.5
+Tout,283.15 K
+Tf glass,673.15 K
+Tf powder,873.15 K
+Tc chiller,281.15 K
+Th chiller,282.15 K
+V̇ nitrogen,2.0 L minute^-1
+Cycle time,6.5 hr
