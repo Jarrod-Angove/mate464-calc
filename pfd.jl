@@ -101,7 +101,8 @@ equipment_energy = DataFrame(variables = ["Qf_powder", "Qf_glass", "Qcondense", 
                              energy = [Qf_powder, Qf_glass, Qc, Qchiller].|>u"kJ",
                              power = [Qf_powder/tcyc_powder, Qf_glass/tcyc_glass, Qc/tcyc_powder,
                                       Qchiller/tcyc_powder] .|>u"W",
-                             efficiency = [η_fp, η_fg, η_condenser, η_chiller])
+                             efficiency = [η_fp, η_fg, η_condenser, η_chiller], 
+                             cycle_time = [tcyc_powder, tcyc_glass, tcyc_powder, tcyc_powder])
 
 system_parameters = DataFrame(parameter = ["Feed/batch", "T₀", "X Al in feed", "X powder in feed",
                                            "X Hg in Al", "X Hg in powder", "X Hg in glass",
