@@ -1,8 +1,0 @@
-Name,Value (kJ),Description
-"\Delta H_{\mathrm{Hg,C}}",-323.30382445557063,Mercury in condenser
-"$\Delta H_{\mathrm{N_2, C}}$",-58.64638983809206,Nitrogen in condenser
-"$\Delta H_\mathrm{Hg, F}$",321.27332040465006,Mercury in furnace
-"$\Delta H_{\mathrm{N_2, F}}$",58.64638983809206,Nitrogen in furnace
-$\Delta H_{\mathrm{p}}$,74553.61670922398,Powder in furnace (batch)
-$\Delta H_\mathrm{C}$,-381.9502142936627,Total condenser change
-$\Delta H_\mathrm{F}$,74933.53641946672,Total furnace change
