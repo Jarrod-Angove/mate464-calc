@@ -53,7 +53,7 @@ Tsat = 521u"K"
 # Total cycle time
 # Assuming these are equivalent for the time being
 tcyc_powder = 6.5u"hr" 
-tcyc_glass = 4.5u"hr"
+tcyc_glass = 6.5u"hr"
 
 # Calculating the mass flow rate of nitrogen based on the volumetric flow
 # PV = nRT
