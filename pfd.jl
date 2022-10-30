@@ -54,14 +54,17 @@ streams = [stream1, stream2, stream3, stream4, stream5, stream6, stream7, stream
           stream9, stream10, stream11, stream12, stream13, stream14, stream15, stream16,
           stream17, stream18, stream19, stream20, stream21, streamCCollect]
 
+# Stream ID labels, in order of the streams listed above
 IDs = ["1", "2", "3", "4", "5", "6", "7", "8",
           "9", "10", "11", "12", "13", "14", "15", "16", "17",
           "18", "19", "20", "21", "CCollect"]
 
+# Updating the stream ID based on the labels above
 for i in 1:length(streams)
     streams[i].ID = IDs[i]
 end
 
+# Converting stream objects to simple vectors of parameters for each component
 function stream2vec(stream::strm)
     vecs = []
     for component in stream.cmp
@@ -76,23 +79,28 @@ function stream2vec(stream::strm)
     return vecs
 end
 
+# Flattening the arrays
 vecofvecs = collect(Iterators.flatten(stream2vec.(streams)))
 
+# Including temperature and stream ID in the list of parameters in the table
 namelist = String.(collect(fieldnames(comp)))
 push!(namelist, "T")
 push!(namelist, "ID")
 
+# Pushing the parameter vectors into a dataframe
 df = DataFrame()
-
 for (i, name) in enumerate(namelist)
     df[!, name] = [vecofvecs[j][i] for j in 1:length(vecofvecs)]
 end
 
+# Creating some summary tables
 equipment_power = DataFrame(variables = ["Qf_powder", "Qf_glass", "Qcondense", "Qchiller"],
                       values = [Qf_powder/tcyc_powder, Qf_glass/tcyc_glass, Qc/tcyc_powder,
                                 Qchiller/tcyc_powder].|>u"W")
 equipment_energy = DataFrame(variables = ["Qf_powder", "Qf_glass", "Qcondense", "Qchiller"],
-                             values = [Qf_powder, Qf_glass, Qc, Qchiller].|>u"kJ", 
+                             energy = [Qf_powder, Qf_glass, Qc, Qchiller].|>u"kJ",
+                             power = [Qf_powder/tcyc_powder, Qf_glass/tcyc_glass, Qc/tcyc_powder,
+                                      Qchiller/tcyc_powder] .|>u"W",
                              efficiency = [η_fp, η_fg, η_condenser, η_chiller])
 
 system_parameters = DataFrame(parameter = ["Feed/batch", "T₀", "X Al in feed", "X powder in feed",
@@ -104,9 +112,8 @@ system_parameters = DataFrame(parameter = ["Feed/batch", "T₀", "X Al in feed",
                                        x_Hg_powder, x_Hg_glass, η_condenser, η_fp, η_fg,
                                        η_chiller, Tout, Tf_glass, Tf, Tc, Th, V_N2, tcyc_powder]
                              )
-system_results = DataFrame(variable = ["Mass Hg", "Mass glass", "Mass powder", "Mass Al", "Mass N₂"],
-                           values = [m_Hg_total, mglass, mpowder, mAl, m_N2])
 
+# Selecting, renaming, and unifying the units for each parameter
 cleandf = select(df, :ID=>"Stream", :sp => "Species",
                 :m=> (x-> ustrip.(x.|>u"g")) =>"Mass (g)",
                 :T => ByRow(ustrip) => "Temp (K)",
@@ -114,17 +121,12 @@ cleandf = select(df, :ID=>"Stream", :sp => "Species",
                 :H => (x->ustrip.(u"J", x)) => "Enthalpy (J)",
                 :pz => "Phase")
 
-CSV.write("cleandf.csv", cleandf)
-CSV.write("system_parameters.csv", system_parameters)
-CSV.write("system_masses.csv", system_results)
 
 # Checking mass balances
 # Just for the sieve
 mass_check([stream3, stream4], [stream2])
-
 # For the whole input/output of solids (nitrogen not accounted for)
 mass_check([stream2], [stream18, stream19, stream21])
-
 # Checking the energy
 # I am not including the chiller power as this is redundant with the condenser power
 input_enths = [Qf_glass*η_fg, Qf_powder*η_fp, Qc*η_condenser]
@@ -137,3 +139,12 @@ g_heat_time = streamenergy(stream18)/pmax_fg |> u"minute" # heating time for the
 p_heat_time = streamenergy(stream19)/pmax_fp |> u"minute" # heating time for the powder furnace
 
 cuse = streamCCollect.cmp[1].m/ccap |> u"mg"              # Activated carbon use per batch
+
+system_results = DataFrame(variable = ["Mass Hg", "Mass glass", "Mass powder", "Mass Al", "Mass N₂", "Hg Collected in filter", "Glass heating time", "Powder heating time"],
+                           values = [m_Hg_total, mglass, mpowder, mAl, m_N2, cuse, g_heat_time, p_heat_time])
+
+# Writing the dataframes to CSV files
+CSV.write("cleandf.csv", cleandf)
+CSV.write("system_parameters.csv", system_parameters)
+CSV.write("system_results.csv", system_results)
+CSV.write("equipment_energy.csv", equipment_energy)
