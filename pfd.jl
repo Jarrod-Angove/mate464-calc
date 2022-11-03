@@ -111,8 +111,7 @@ system_parameters = DataFrame(parameter = ["Feed/batch", "T₀", "X Al in feed",
                                            "Th chiller", "V̇ nitrogen", "Cycle time"],
                               value = [mfeed, T0, x_Al_feed, x_feed_powder, x_Hg_Al,
                                        x_Hg_powder, x_Hg_glass, η_condenser, η_fp, η_fg,
-                                       η_chiller, Tout, Tf_glass, Tf, Tc, Th, V_N2, tcyc_powder]
-                             )
+                                       η_chiller, Tout, Tf_glass, Tf, Tc, Th, V_N2, tcyc_powder])
 
 # Selecting, renaming, and unifying the units for each parameter
 cleandf = select(df, :ID=>"Stream", :sp => "Species",
@@ -121,7 +120,6 @@ cleandf = select(df, :ID=>"Stream", :sp => "Species",
                 :h => (x->ustrip.(u"J*g^-1", x)) => "Enthalpy (J/g)",
                 :H => (x->ustrip.(u"J", x)) => "Enthalpy (J)",
                 :pz => "Phase")
-
 
 # Checking mass balances
 # Just for the sieve
@@ -138,11 +136,12 @@ energy_check([stream2, stream14],
 # Calculating some output parameters
 g_heat_time = streamenergy(stream18)/pmax_fg |> u"minute" # heating time for the glass furnace
 p_heat_time = streamenergy(stream19)/pmax_fp |> u"minute" # heating time for the powder furnace
+V_water = stream12.cmp[1].m / tcyc_powder / 0.99973u"g/cm^3" |> u"mL/s"
 
 cuse = streamCCollect.cmp[1].m/ccap |> u"mg"              # Activated carbon use per batch
 
-system_results = DataFrame(variable = ["Mass Hg", "Mass glass", "Mass powder", "Mass Al", "Mass N₂", "Hg Collected in filter", "Glass heating time", "Powder heating time"],
-                           values = [m_Hg_total, mglass, mpowder, mAl, m_N2, cuse, g_heat_time, p_heat_time])
+system_results = DataFrame(variable = ["Mass Hg", "Mass glass", "Mass powder", "Mass Al", "Mass N₂", "Hg Collected in filter", "Glass heating time", "Powder heating time", "Water flow rate"],
+                           values = [m_Hg_total, mglass, mpowder, mAl, m_N2, cuse, g_heat_time, p_heat_time, V_water])
 
 # Writing the dataframes to CSV files
 CSV.write("cleandf.csv", cleandf)

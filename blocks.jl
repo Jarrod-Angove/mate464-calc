@@ -1,4 +1,4 @@
-## Stream flow simulator: Functions and Types ##
+## System model: Functions and Types ##
 
 using Interpolations, Unitful, QuadGK, CSV, Roots
 
@@ -54,8 +54,6 @@ end
 function CpGlass(T)
     (46.95u"J*mol^-1*K^-1" + 34.31e-3u"J*mol^-1*K^-2"*T - 11.3e-5u"J*mol^-1*K"*T^(-2))/M_glass
 end
-
-
 
 # Vapour pressure from [kroschwitzKirkOthmerEncyclopediaChemical2004] (only works from 0-150C, in kPa)
 function v_P_Hg(T)
@@ -284,7 +282,6 @@ function furnace(in1::strm, in2::strm, Tf, eff, r_F)
     return [stream3, stream4, Qf]
 end
 
-
 # Function for the carbon filter
 """
 # Activated carbon filter
@@ -380,5 +377,3 @@ end
 function absolute_h(Cp, T)
     h = Cp*(T - T0)
 end
-
-
