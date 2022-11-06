@@ -34,9 +34,9 @@ m_Hg_total = mHg_glass + mHg_Al + mHg_powder
 # Equipment efficiency
 # Equipment does not have listed efficiency; leaving these as they are for now
 η_condenser = 1       # Condenser efficiency
-η_fp = 0.5              # Powder furnace efficiency
+η_fp = 0.5             # Powder furnace efficiency
 η_fg = 0.5              # Glass furnace efficiency
-η_chiller = 0.5         # Chiller efficiency
+η_chiller = 0.5         # Chiller efficiency based on the 0.6 COP of the thermoelectric cooler; little bit extra for pump
 
 Tf = (600+273.15)u"K"               # Powder furnace temperature
 Tf_glass = (400+273.15)u"K"         # Glass furnace temperature
