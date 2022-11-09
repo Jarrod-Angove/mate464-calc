@@ -108,10 +108,10 @@ system_parameters = DataFrame(parameter = ["Feed/batch", "T₀", "X Al in feed",
                                            "X Hg in Al", "X Hg in powder", "X Hg in glass",
                                            "η condenser", "η powder furnace", "η glass furnace",
                                            "η chiller", "Tout", "Tf glass", "Tf powder", "Tc chiller",
-                                           "Th chiller", "V̇ nitrogen", "Cycle time"],
+                                           "Th chiller", "V̇ nitrogen", "SATP N₂ vol", "Cycle time"],
                               value = [mfeed, T0, x_Al_feed, x_feed_powder, x_Hg_Al,
                                        x_Hg_powder, x_Hg_glass, η_condenser, η_fp, η_fg,
-                                       η_chiller, Tout, Tf_glass, Tf, Tc, Th, V_N2, tcyc_powder])
+                                       η_chiller, Tout, Tf_glass, Tf, Tc, Th, V_N2, V_N2_satp, tcyc_powder])
 
 # Selecting, renaming, and unifying the units for each parameter
 cleandf = select(df, :ID=>"Stream", :sp => "Species",
