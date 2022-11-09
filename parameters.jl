@@ -58,10 +58,10 @@ tcyc_glass = 6.5u"hr"
 # Calculating the mass flow rate of nitrogen based on the volumetric flow
 # PV = nRT
 # MPV/RT = m
-# Volumetric flow rate of nitrogen gas according to Lee 2020
+# Volumetric flow rate of nitrogen gas according to Lee 2020 (for a single furnace)
 V_N2 = 2u"L*minute^-1"
 m_N2 = M_N2*Pf*V_N2/(R*Tf) * tcyc_powder |> u"kg"
-V_N2_satp = (m_N2/M_N2)*R*298.15u"K" / 1u"bar" |> u"L"
+V_N2_satp = (2*m_N2/M_N2)*R*298.15u"K" / 1u"bar" |> u"L"
 
 # Chiller stuff
 Tc = (273.15+8.)u"K"         # Temperature of the cold water
