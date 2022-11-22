@@ -18,7 +18,7 @@ stream3 = strm([comp(mHg_glass, h0, "Hg", "s"),
 stream4 = strm([comp(mHg_powder, h0, "Hg", "s"), comp(mpowder, h0, "powder", "s")], T0)
 
 # Assuming the flow gas streams are the same for both furnaces
-stream16 = strm([comp(m_N2, CpN2*(Tout-T0), "N2", "s")], Tout)
+stream16 = strm([comp(m_N2, h0, "N2", "s")], T0)
 stream17 = deepcopy(stream16)
 
 # Furnace for the powder
@@ -31,7 +31,7 @@ stream17 = deepcopy(stream16)
 stream7 = mergestream(stream5, stream6)
 
 # Condenser balance
-(stream8, stream21, Qc) = condenser(stream7, Tout, η_condenser, Pf)
+(stream8, stream13, Qc) = condenser(stream7, Tout, η_condenser, Pf)
 
 # Carbon filter balance
 (stream9, streamCCollect) = cfilter(stream8)
@@ -43,21 +43,18 @@ stream10 = deepcopy(stream9)
 
 # These depend on the system volume
 # stream14 = stream20
-stream14 = deepcopy(stream10)
-stream20 = deepcopy(stream10)
-
-stream13 = deepcopy(stream10)
+stream14 = strm([comp(stream10.cmp[1].m, h0, "N2", "g")], T0)
 
 stream15 = deepcopy(stream13)
 
 streams = [stream1, stream2, stream3, stream4, stream5, stream6, stream7, stream8,
           stream9, stream10, stream11, stream12, stream13, stream14, stream15, stream16,
-          stream17, stream18, stream19, stream20, stream21, streamCCollect]
+          stream17, stream18, stream19, streamCCollect]
 
 # Stream ID labels, in order of the streams listed above
 IDs = ["1", "2", "3", "4", "5", "6", "7", "8",
           "9", "10", "11", "12", "13", "14", "15", "16", "17",
-          "18", "19", "20", "21", "CCollect"]
+          "18", "19", "CCollect"]
 
 # Updating the stream ID based on the labels above
 for i in 1:length(streams)
@@ -125,12 +122,12 @@ cleandf = select(df, :ID=>"Stream", :sp => "Species",
 # Just for the sieve
 mass_check([stream3, stream4], [stream2])
 # For the whole input/output of solids (nitrogen not accounted for)
-mass_check([stream2], [stream18, stream19, stream21])
+mass_check([stream2], [stream18, stream19, stream13])
 # Checking the energy
 # I am not including the chiller power as this is redundant with the condenser power
 input_enths = [Qf_glass*η_fg, Qf_powder*η_fp, Qc*η_condenser]
 energy_check([stream2, stream14],
-             [stream18, stream19, stream21, streamCCollect, stream20],
+             [stream18, stream19, stream13, streamCCollect, stream10],
              sum(input_enths))
 
 # Calculating some output parameters
