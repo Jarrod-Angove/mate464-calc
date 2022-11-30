@@ -292,8 +292,9 @@ Calculates the output parameters for the
 of an activated carbon filter (assumed 100% capture rate) and returns them as a vector of streams
 """
 function cfilter(input::strm)
-    stream2 = strm([input.cmp[2]], input.T)
-    stream3 = strm([input.cmp[1]], input.T)
+    stream2 = strm([comp(input.cmp[1].m * (1-carbon_eff), input.cmp[1].h, input.cmp[1].sp, "g"), input.cmp[2]], input.T)
+    stream3 = strm([comp(input.cmp[1].m * carbon_eff, input.cmp[1].h, input.cmp[1].sp, "s")], input.T)
+    mass_check([input], [stream2, stream3])
     energy_check([input], [stream2, stream3])
     return [stream2, stream3]
 end
