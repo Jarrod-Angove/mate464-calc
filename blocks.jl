@@ -308,7 +308,7 @@ end
 """
 function mergestream(stream1::strm, stream2::strm)
     # see join_algebra.jl notbook for the equation used here
-    # Pulling variables out of the stream structs 
+    # Pulling variables out of the stream structs into varialbes
     Cp_a = stream1.cmp[1].cp
     Cp_b = stream1.cmp[2].cp
     T1 = stream1.T; T2 = stream2.T
@@ -327,7 +327,7 @@ function mergestream(stream1::strm, stream2::strm)
     (m1a*(quadgk(Cp_a, T0, T1)[1] + dh_v_Hg) +
      m2a*(quadgk(Cp_a, T0, T2)[1] + dh_v_Hg) +
      m1b*Cp_b*(T1-T0) + m2b*Cp_b*(T2 - T0))
-    # Finding the root
+    # Finding the root with an initial guess of 500 K 
     T3 = find_zero(f, 500u"K")
 
     h3a = (quadgk(Cp_a, T0, T3)[1] + dh_v_Hg)
